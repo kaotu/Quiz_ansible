@@ -20,7 +20,13 @@ usermod -aG wheel centos
 ```
 #### 2. Update hosts at /etc/hosts
 ``` bash
-sudo vim /etc/hosts
+vim /etc/hosts
    192.168.52.140 labx labx.example.com
    192.168.52.141 serverx serverx.example.com
 ```
+
+## Use playbook 
+``` bash
+ansible-playbook --ask-become-pass wordpress.yml
+```
+> Note: enter password centos
