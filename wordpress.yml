@@ -1,6 +1,6 @@
 ---
 - hosts: server
-  remote_user: centos
+  remote_user: kaotu
   become: yes
   gather_facts: false
 
@@ -51,20 +51,48 @@
     pip: 
       name: PyMySQL
 
-#  - name: Set password for root
-#    mysql_user:
-#      name: root
-#      password: abc
-
+  - name: Set password for root
+    mysql_user:
+      login_user: root
+      login_password: abc
+      name: root
+      password: abc
+ 
   - name: Removes anonymous user account for localhost
     mysql_user:
       login_user: root
       login_password: abc
-      host: localhost
       name: ''
       state: absent
- 
-  - name: Remove database test
+
+  - name: Removes all anonymous user accounts
+    mysql_user:
+      login_user: root
+      login_password: abc
+      name: ''
+      host_all: yes
+      state: absent
+
+  - name: Delete database with name 'test'
     mysql_db:
-      name: test
+      login_user: root
+      login_password: abc
+      name: 
+        - test
+        - test*
       state: absent 
+ 
+  - name: Create database with name 'WordPress'
+    mysql_db:
+      login_user: root
+      login_password: abc
+      name: wordpress 
+      state: present
+    
+  - name: Add user ansible
+    mysql_user:
+      login_user: root
+      login_password: abc
+      name: ansible
+      password: mypassword
+      priv: 'wordpress.*:ALL'
