@@ -12,6 +12,7 @@ sudo vim /etc/hosts
    192.168.52.140 labx labx.example.com
    192.168.52.141 serverx serverx.example.com
 ```
+> Note: Can change your ip
 
 ## Login by `user root` at serverx.example.com
 #### 1. Add group wheel for user centos
@@ -24,6 +25,7 @@ vim /etc/hosts
    192.168.52.140 labx labx.example.com
    192.168.52.141 serverx serverx.example.com
 ```
+> Note: Can change your ip
 
 ## Use playbook 
 ``` bash
