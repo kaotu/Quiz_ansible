@@ -96,3 +96,59 @@
       name: ansible
       password: mypassword
       priv: 'wordpress.*:ALL'
+ 
+  - name: Unzip tar wordpress file
+    unarchive:
+      src: https://wordpress.org/wordpress-5.0.tar.gz
+      dest: /var/www/html
+      remote_src: yes
+
+  - name: Change file ownership, group and permissions
+    file:
+      path: /var/www/html/wordpress
+      owner: apache
+      group: apache
+      mode: '0755'
+      recurse: yes
+
+  - name: Create uploads directory
+    file: 
+      path: /var/www/html/wordpress/wp-content/uploads
+      group: apache
+      recurse: yes
+
+  - name: Set wp-config
+    copy:
+      src: /var/www/html/wordpress/wp-config-sample.php
+      dest: /var/www/html/wordpress/wp-config.php
+      owner: apache
+      group: apache
+      mode: '0755'
+      remote_src: yes
+
+  - name: Replace DB_NAME
+    lineinfile:
+      path: /var/www/html/wordpress/wp-config.php
+      regexp: 'database_name_here'
+      line: define('DB_NAME', 'wordpress');
+      owner: apache
+      group: apache
+      mode: '0755'
+  
+  - name: Replace DB_USER
+    lineinfile:
+      path: /var/www/html/wordpress/wp-config.php
+      regexp: 'username_here'
+      line: define('DB_USER', 'ansible');
+      owner: apache
+      group: apache
+      mode: '0755'
+
+  - name: Replace DB_PASSWORD
+    lineinfile:
+      path: /var/www/html/wordpress/wp-config.php
+      regexp: 'password_here'
+      line: define('DB_PASSWORD', 'mypassword');
+      owner: apache
+      group: apache
+      mode: '0755'
