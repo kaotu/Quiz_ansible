@@ -1,6 +1,6 @@
 ---
 - hosts: server
-  remote_user: kaotu
+  remote_user: "{{ remote_user }}"
   become: yes
   gather_facts: false
 
@@ -53,30 +53,30 @@
 
   - name: Set password for root
     mysql_user:
-      login_user: root
-      login_password: abc
-      name: root
-      password: abc
+      login_user: "{{login_user }}"
+      login_password: "{{ login_password }}"
+      name: "{{login_user }}"
+      password: "{{ login_password }}"
  
   - name: Removes anonymous user account for localhost
     mysql_user:
-      login_user: root
-      login_password: abc
+      login_user: "{{login_user }}"
+      login_password: "{{ login_password }}"
       name: ''
       state: absent
 
   - name: Removes all anonymous user accounts
     mysql_user:
-      login_user: root
-      login_password: abc
+      login_user: "{{login_user }}"
+      login_password: "{{ login_password }}"
       name: ''
       host_all: yes
       state: absent
 
   - name: Delete database with name 'test'
     mysql_db:
-      login_user: root
-      login_password: abc
+      login_user: "{{login_user }}"
+      login_password: "{{ login_password }}"
       name: 
         - test
         - test*
@@ -84,17 +84,17 @@
  
   - name: Create database with name 'WordPress'
     mysql_db:
-      login_user: root
-      login_password: abc
+      login_user: "{{login_user }}"
+      login_password: "{{ login_password }}"
       name: wordpress 
       state: present
     
   - name: Add user ansible
     mysql_user:
-      login_user: root
-      login_password: abc
+      login_user: "{{login_user }}"
+      login_password: "{{ login_password }}"
       name: ansible
-      password: mypassword
+      password: "{{ db_password }}"
       priv: 'wordpress.*:ALL'
  
   - name: Unzip tar wordpress file
@@ -130,7 +130,7 @@
     lineinfile:
       path: /var/www/html/wordpress/wp-config.php
       regexp: 'database_name_here'
-      line: define('DB_NAME', 'wordpress');
+      line: define('DB_NAME', '{{ db_name }}');
       owner: apache
       group: apache
       mode: '0755'
@@ -139,7 +139,7 @@
     lineinfile:
       path: /var/www/html/wordpress/wp-config.php
       regexp: 'username_here'
-      line: define('DB_USER', 'ansible');
+      line: define('DB_USER', '{{ db_user }}');
       owner: apache
       group: apache
       mode: '0755'
@@ -148,7 +148,7 @@
     lineinfile:
       path: /var/www/html/wordpress/wp-config.php
       regexp: 'password_here'
-      line: define('DB_PASSWORD', 'mypassword');
+      line: define('DB_PASSWORD', '{{ db_password }}');
       owner: apache
       group: apache
       mode: '0755'
