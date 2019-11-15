@@ -1,0 +1,70 @@
+---
+- hosts: server
+  remote_user: centos
+  become: yes
+  gather_facts: false
+
+  tasks:
+  - name: Install dependency of wordpress
+    yum:
+      name:
+       - httpd
+       - mariadb
+       - mariadb-server
+       - php 
+       - php-common 
+       - php-mysql 
+       - php-gd 
+       - php-xml 
+       - php-mbstring
+       - php-mcrypt 
+       - php-xmlrpc 
+       - unzip 
+       - wget
+      state: installed
+
+  - name: Start and Enable service httpd
+    service: 
+      name: httpd
+      state: started
+      enabled: yes
+
+  - name: Start and Enable service mariadb
+    service: 
+      name: mariadb
+      state: started
+      enabled: yes
+    
+  - name: Add firewall for http
+    firewalld:
+      service: http
+      permanent: yes
+      state: enabled
+      immediate: yes 
+ 
+  - name: Install pip
+    yum:
+     name: python-pip
+     state: present
+
+  - name: Install The PyMySQL
+    pip: 
+      name: PyMySQL
+
+#  - name: Set password for root
+#    mysql_user:
+#      name: root
+#      password: abc
+
+  - name: Removes anonymous user account for localhost
+    mysql_user:
+      login_user: root
+      login_password: abc
+      host: localhost
+      name: ''
+      state: absent
+ 
+  - name: Remove database test
+    mysql_db:
+      name: test
+      state: absent 

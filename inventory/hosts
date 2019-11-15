@@ -1,0 +1,6 @@
+[server]
+192.168.52.141
+
+[server:vars]
+login_user= root
+login_password= abc
