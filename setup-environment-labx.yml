@@ -1,0 +1,29 @@
+---
+- hosts: lab
+  gather_facts: false
+  remote_user: "{{ remote_user }}"
+  become: yes
+
+  tasks:
+  - name: Set serverx hosts at hosts file
+    lineinfile:
+      path: /etc/hosts
+      insertafter: '^::1'
+      #line: 192.168.52.141 serverx serverx.example.com
+      line: 192.168.106.129 serverx serverx.example.com
+  
+  - name: Set labx hosts at hosts file
+    lineinfile:
+      path: /etc/hosts
+      insertafter: '^::1'
+      #line: 192.168.52.140 labx labx.example.com
+      line: 192.168.106.128 labx labx.example.com
+
+  - name: Add group wheel for centos user
+    user:
+      name: centos
+      groups: wheel
+      append: yes
+      generate_ssh_key: yes
+      ssh_key_bits: 2048
+      ssh_key_file: .ssh/id_rsa
