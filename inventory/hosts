@@ -1,5 +1,13 @@
+[lab]
+#192.168.52.140
+#192.168.106.128
+
 [server]
-192.168.52.141
+#192.168.52.141
+#192.168.106.129
+
+[lab:vars]
+remote_user= centos
 
 [server:vars]
 remote_user= centos
