@@ -51,24 +51,17 @@
     pip: 
       name: PyMySQL
 
-  - name: Set password for root
-    mysql_user:
-      login_user: "{{login_user }}"
-      login_password: "{{ login_password }}"
-      name: "{{login_user }}"
-      password: "{{ login_password }}"
- 
   - name: Removes anonymous user account for localhost
     mysql_user:
       login_user: "{{login_user }}"
-      login_password: "{{ login_password }}"
+      login_password: ""
       name: ''
       state: absent
 
   - name: Removes all anonymous user accounts
     mysql_user:
       login_user: "{{login_user }}"
-      login_password: "{{ login_password }}"
+      login_password: ""
       name: ''
       host_all: yes
       state: absent
@@ -76,7 +69,7 @@
   - name: Delete database with name 'test'
     mysql_db:
       login_user: "{{login_user }}"
-      login_password: "{{ login_password }}"
+      login_password: ""
       name: 
         - test
         - test*
@@ -85,10 +78,17 @@
   - name: Create database with name 'WordPress'
     mysql_db:
       login_user: "{{login_user }}"
-      login_password: "{{ login_password }}"
+      login_password: ""
       name: wordpress 
       state: present
     
+  - name: Set password for root
+    mysql_user:
+      login_user: "{{login_user }}"
+      login_password: ""
+      name: "{{login_user }}"
+      password: "{{ login_password }}"
+  
   - name: Add user ansible
     mysql_user:
       login_user: "{{login_user }}"
