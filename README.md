@@ -1,34 +1,22 @@
 # How to set up ansible for wordpress
 
-## Login by `user centos` at labx.example.com
-#### 1. Create ssh key and copy pub key to server
-``` bash
-ssh-keygen
-ssh-copy-id centos@serverx.example.com
-```
-#### 2. Update hosts at /etc/hosts
-``` bash
-sudo vim /etc/hosts
-   192.168.52.140 labx labx.example.com
-   192.168.52.141 serverx serverx.example.com
-```
-> Note: Can change your ip
+## Requirement
+### `labx.example.com & serverx.example.com install ansible git`
 
-## Login by `user root` at serverx.example.com
-#### 1. Add group wheel for user centos
+## Login by `user centos` at labx.example.com
+
+#### - Run playbook setup-environment-labx.yml
 ``` bash
-usermod -aG wheel centos
+$ ansible-playbook -k --ask-become-pass setup-environment-labx.yml
 ```
-#### 2. Update hosts at /etc/hosts
+#### - Run playbook setup-environment-server.yml
 ``` bash
-vim /etc/hosts
-   192.168.52.140 labx labx.example.com
-   192.168.52.141 serverx serverx.example.com
+$ ansible-playbook -k --ask-become-pass setup-environment-server.yml
 ```
-> Note: Can change your ip
+> Note: Enter password `centos` 2 times
 
 ## Use playbook 
 ``` bash
-ansible-playbook --ask-become-pass wordpress.yml
+$ ansible-playbook --ask-become-pass wordpress.yml
 ```
-> Note: enter password centos
+> Note: Enter password `centos` ถ้าต้องการรัน playbook wordpress.yml ซ้ำให้ใช้ playbook ที่ชื่อว่า `wordpress-idempotent.yml`
