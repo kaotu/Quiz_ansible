@@ -20,3 +20,9 @@ $ ansible-playbook -k --ask-become-pass setup-environment-server.yml
 $ ansible-playbook --ask-become-pass wordpress.yml
 ```
 > Note: Enter password `centos` ถ้าต้องการรัน playbook wordpress.yml ซ้ำให้ใช้ playbook ที่ชื่อว่า `wordpress-idempotent.yml`
+
+### Use playbook by roles
+```bash
+$ ansible-playbook roles_install_WP.yml --ask-become-pass -k
+```
+*ยังไม่ได้เทสของ db ใหม่เยยยย
