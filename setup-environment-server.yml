@@ -21,7 +21,7 @@
 
   - name: Add group wheel for centos user
     user:
-      name: centos
+      name: "{{ remote_user }}"
       groups: wheel
       append: yes
  
