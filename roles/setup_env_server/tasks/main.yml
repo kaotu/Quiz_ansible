@@ -1,0 +1,37 @@
+---
+# tasks file for setup_env_server
+- name: Set serverx hosts at hosts file
+  lineinfile:
+    path: /etc/hosts
+    insertafter: '^::1'
+    line: '{{ ip_serverx }} serverx serverx.example.com'
+    #line: 192.168.106.129 serverx serverx.example.com
+
+- name: Set labx hosts at hosts file
+  lineinfile:
+    path: /etc/hosts
+    insertafter: '^::1'
+    line: '{{ ip_labx }}  labx labx.example.com'
+    #line: 192.168.106.128 labx labx.example.com
+
+- name: Add group wheel for centos user
+  user:
+    name: "{{ remote_user }}"
+    groups: wheel
+    append: yes
+
+- name: Create ssh directory
+  file:
+    path:  /home/{{ remote_user }}/.ssh/
+    state: directory
+    owner: "{{ remote_user }}"
+    group: "{{ remote_user }}"
+    mode: '0700'
+
+- name: Copy public key to server
+  copy:
+   src: ~/.ssh/id_rsa.pub
+   dest: /home/{{ remote_user }}/.ssh/authorized_keys
+   owner: "{{ remote_user }}"
+   group: "{{ remote_user }}"
+   mode: '0600'

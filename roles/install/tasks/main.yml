@@ -1,0 +1,119 @@
+---
+# tasks file for install
+- name: Install dependency of wordpress
+  yum:
+    name:
+     - httpd
+     - mariadb
+     - mariadb-server
+     - php 
+     - php-common 
+     - php-mysql 
+     - php-gd 
+     - php-xml 
+     - php-mbstring
+     - php-mcrypt 
+     - php-xmlrpc 
+     - unzip 
+     - wget
+     - python-pip
+    state: installed
+
+- name: Start and Enable servcie httpd & mariadb
+  service:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    enabled: "{{ item.enabled }}"
+  loop:
+    - {name: httpd, state: started, enabled: yes}
+    - {name: mariadb, state: started, enabled: yes}
+  
+- name: Add firewall for http
+  firewalld:
+    service: http
+    permanent: yes
+    state: enabled
+    immediate: yes 
+
+- name: Install The PyMySQL
+  pip: 
+    name: PyMySQL
+
+- name: Set password for root
+  block:
+    - mysql_user:
+        login_user: "{{ login_user }}"
+        login_password: "{{ login_password }}"
+        name: "{{ login_user }}"
+        password: "{{ login_password }}"
+  rescue:
+    - mysql_user:
+        name: "{{ login_user }}"
+        password: "{{ login_password }}"
+
+- name: Removes anonymous user account for localhost
+  mysql_user:
+    login_user: "{{ login_user }}"
+    login_password: "{{ login_password }}"
+    name: ''
+    state: absent
+
+- name: Delete database with name 'test' & Create database with name 'WordPress'
+  mysql_db:
+    login_user: "{{ item.login_user }}"
+    login_password: "{{ item.login_password }}"
+    name: "{{  item.dbname }}"
+    state: "{{ item.state }}"
+  loop:
+    - {login_user: "{{ login_user }}", login_password: "{{ login_password }}", dbname: test*, state: absent}
+    - {login_user: "{{ login_user }}", login_password: "{{ login_password }}", dbname: wordpress, state: present}
+  
+- name: Add user ansible
+  mysql_user:
+    login_user: "{{login_user }}"
+    login_password: "{{ login_password }}"
+    name: ansible
+    password: "{{ db_password }}"
+    priv: 'wordpress.*:ALL'
+
+- name: Unzip tar wordpress file
+  unarchive:
+    src: https://wordpress.org/wordpress-5.0.tar.gz
+    dest: /var/www/html
+    remote_src: yes
+
+- name: Change file ownership, group and permissions
+  file:
+    path: /var/www/html/wordpress
+    owner: apache
+    group: apache
+    mode: '0755'
+    recurse: yes
+
+- name: Create uploads directory
+  file: 
+    path: /var/www/html/wordpress/wp-content/uploads
+    group: apache
+    recurse: yes
+
+- name: Set wp-config
+  copy:
+    src: /var/www/html/wordpress/wp-config-sample.php
+    dest: /var/www/html/wordpress/wp-config.php
+    owner: apache
+    group: apache
+    mode: '0755'
+    remote_src: yes
+
+- name: Update and Replace data to wp-config.php
+  lineinfile:
+     path: "{{ item.path }}"
+     regexp: "{{ item.regexp }}"
+     line: "{{ item.line }}"
+     owner: "{{ item.owner }}"
+     group: "{{ item.group }}"
+     mode: "{{ item.mode }}"
+  loop:
+    - {path: /var/www/html/wordpress/wp-config.php, regexp: 'database_name_here', line: "define('DB_NAME', '{{ db_name }}');", owner: apache, group: apache, mode: '0755'}
+    - {path: /var/www/html/wordpress/wp-config.php, regexp: 'username_here', line: "define('DB_USER', '{{ db_user }}');", owner: apache, group: apache, mode: '0755'}
+    - {path: /var/www/html/wordpress/wp-config.php, regexp: 'password_here', line: "define('DB_PASSWORD', '{{ db_password }}');", owner: apache, group: apache, mode: '0755'}
