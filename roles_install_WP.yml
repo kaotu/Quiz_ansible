@@ -1,0 +1,17 @@
+---
+- hosts: lab
+  remote_user: "{{ remote_user }}"
+  become: yes
+  gather_facts: false
+
+  roles:
+    - setup_env_lab
+
+- hosts: server
+  remote_user: "{{ remote_user }}"
+  become: yes
+  gather_facts: false
+
+  roles:
+    - setup_env_server 
+    - install
