@@ -1,18 +1,22 @@
 [lab]
-192.168.52.140
+#192.168.52.140
 #192.168.106.128
 
 [server]
-192.168.52.141
+#192.168.52.141
 #192.168.106.129
 
 [lab:vars]
-remote_user= centos
+remote_user= 
+ip_labx= 
+ip_serverx= 
 
 [server:vars]
-remote_user= centos
+remote_user= 
 login_user= root
 login_password= abc
 db_name= wordpress
 db_user= ansible
 db_password= mypassword
+ip_serverx= 
+ip_labx= 
