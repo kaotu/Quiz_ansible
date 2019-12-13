@@ -41,15 +41,20 @@
 
 - name: Set password for root
   block:
-    - mysql_user:
+    - name: Login
+      mysql_user:
         login_user: "{{ login_user }}"
         login_password: "{{ login_password }}"
         name: "{{ login_user }}"
         password: "{{ login_password }}"
   rescue:
-    - mysql_user:
+    - name: Set password for root
+      mysql_user:
         name: "{{ login_user }}"
         password: "{{ login_password }}"
+  always:
+    - debug:
+        msg: "Set password success"
 
 - name: Removes anonymous user account for localhost
   mysql_user:
