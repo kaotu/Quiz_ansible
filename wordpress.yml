@@ -55,6 +55,9 @@
       - mysql_user:
           name: "{{ login_user }}"
           password: "{{ login_password }}"
+    always:
+      - debug:
+          msg: "Set password success"
   
   - name: Removes anonymous user account for localhost
     mysql_user:
