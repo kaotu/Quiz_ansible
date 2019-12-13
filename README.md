@@ -25,3 +25,4 @@ $ ansible-playbook --ask-become-pass wordpress.yml
 ```bash
 $ ansible-playbook roles_install_WP.yml --ask-become-pass -k
 ```
+Run ซ้ำได้จ้าา
