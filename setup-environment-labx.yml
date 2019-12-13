@@ -9,14 +9,14 @@
     lineinfile:
       path: /etc/hosts
       insertafter: '^::1'
-      line: 192.168.52.141 serverx serverx.example.com
+      line: '{{ ip_serverx }} serverx serverx.example.com'
       #line: 192.168.106.129 serverx serverx.example.com
-  
+
   - name: Set labx hosts at hosts file
     lineinfile:
       path: /etc/hosts
       insertafter: '^::1'
-      line: 192.168.52.140 labx labx.example.com
+      line: '{{ ip_labx }} labx labx.example.com'
       #line: 192.168.106.128 labx labx.example.com
 
   - name: Add group wheel for centos user

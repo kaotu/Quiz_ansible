@@ -9,14 +9,14 @@
     lineinfile:
       path: /etc/hosts
       insertafter: '^::1'
-      line: 192.168.52.141 serverx serverx.example.com
+      line: '{{ ip_serverx }} serverx serverx.example.com'
       #line: 192.168.106.129 serverx serverx.example.com
-  
+
   - name: Set labx hosts at hosts file
     lineinfile:
       path: /etc/hosts
       insertafter: '^::1'
-      line: 192.168.52.140 labx labx.example.com
+      line: '{{ ip_labx }}  labx labx.example.com'
       #line: 192.168.106.128 labx labx.example.com
 
   - name: Add group wheel for centos user
@@ -24,7 +24,7 @@
       name: "{{ remote_user }}"
       groups: wheel
       append: yes
- 
+
   - name: Create ssh directory
     file:
       path:  /home/{{ remote_user }}/.ssh/
@@ -32,7 +32,7 @@
       owner: "{{ remote_user }}"
       group: "{{ remote_user }}"
       mode: '0700'
- 
+
   - name: Copy public key to server
     copy:
      src: ~/.ssh/id_rsa.pub
@@ -40,3 +40,4 @@
      owner: "{{ remote_user }}"
      group: "{{ remote_user }}"
      mode: '0600'
+
